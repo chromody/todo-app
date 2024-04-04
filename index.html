@@ -200,7 +200,57 @@
     updateTasks();
 
     $("#btnCreateTask").on('click', function() {
-        
+        let taskName = $("#txtNTaskName").val();
+        let dueDate = $("#txtNDueDate").val();
+        let location = $("#txtNLocation").val();
+        let instructions = $("#txtNInstructions").val();
+        let status = $("#txtNStatus").val();
+        let errorMsg = '';
+        let blnError = false
+
+        if (taskName.length < 1) {
+            blnError = true;
+            errorMsg += "Task Name not Found. "
+        }
+        if (dueDate.length < 1) {
+            blnError = true;
+            errorMsg += "Due Date not Found. "
+        }
+        if (location.length < 1) {
+            blnError = true;
+            errorMsg += "Location not Found. "
+        }
+        if (instructions.length < 1) {
+            blnError = true;
+            errorMsg += "Instructions not Found. "
+        }
+        if (status.length < 1) {
+            blnError = true;
+            errorMsg += "Status not Found. "
+        }
+
+        if (blnError) {
+            Swal.fire({
+                title: "Error",
+                html: errorMsg,
+                icon: "error"
+            })
+        } else {
+            $.post("http://localhost:8000/task/?TaskName="+taskName+"&DueDate="+dueDate+"&Location="+location+"&Instructions="+instructions+"&Status="+status+"", function(result) {
+                result = JSON.parse(result);
+                console.log(result);
+                if(result.Outcome) {
+
+                } else {
+                    Swal.fire({
+                        title: "Success",
+                        html: "Task Created",
+                        icon: "success"
+                    })
+                }
+            })
+            updateTasks();
+        }
     })
 
     $("#btnNo").on('click', function(){

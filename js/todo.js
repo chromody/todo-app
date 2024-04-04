@@ -66,6 +66,12 @@ app.post('/task', function(req, res, next) {
     let strLocation = req.query.Location;
     let strInstructions = req.query.Instructions;
     let strStatus = req.query.Status;
+    console.log(strTaskName)
+    console.log(strDueDate)
+    console.log(strLocation)
+    console.log(strInstructions)
+    console.log(strStatus)
+
 
 
     if (strTaskName && strDueDate && strLocation && strInstructions && strStatus) {
