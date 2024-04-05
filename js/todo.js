@@ -97,6 +97,7 @@ app.post('/task', function(req, res, next) {
 })
 
 app.delete('/task', function(req, res, next) {
+    console.log("successful delete")
     let strTaskID = req.query.TaskID;
     if (strTaskID) {
         let strCommand = "DELETE FROM tblTasks where TaskID = ?";

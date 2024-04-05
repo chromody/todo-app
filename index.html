@@ -190,7 +190,7 @@
                 $("#divTaskContainer").empty();
                 let taskArr = result["tasks"]
                 taskArr.forEach(task => {
-                    let html = '<div class="card rounded mt-3" id="'+task.TaskID+'"><div class="card-header"><h5 value="'+task.TaskName+'">'+task.TaskName+'</h5></div><div class="card-body"><label class="form-label">Due Date:</p><input class="form-control txtDueDate" value="'+task.DueDate+'"></input><label class="form-label">Location:</label><input class="form-control txtLocation" value="'+task.Location+'"></input><label class="form-label">Instructions:</label><textarea class="form-control txtInstructions" value="'+task.Instructions+'">'+task.Instructions+'</textarea><label class="form-label">Status:</label><input class="form-control txtStatus" value="'+task.Status+'"></input><button class="btn btn-danger rounded-pill mt-3" type="button">Delete</button><button class="btn btn-info rounded-pill mt-3" type="button">Update</button></div></div>'
+                    let html = '<div class="card rounded mt-3" id="'+task.TaskID+'"><div class="card-header"><h5 value="'+task.TaskName+'">'+task.TaskName+'</h5></div><div class="card-body"><label class="form-label">Due Date:</p><input class="form-control txtDueDate" value="'+task.DueDate+'"></input><label class="form-label">Location:</label><input class="form-control txtLocation" value="'+task.Location+'"></input><label class="form-label">Instructions:</label><textarea class="form-control txtInstructions" value="'+task.Instructions+'">'+task.Instructions+'</textarea><label class="form-label">Status:</label><input class="form-control txtStatus" value="'+task.Status+'"></input><button class="btn btn-danger rounded-pill mt-3 btnDeleteTask" type="button" data='+task.TaskID+'>Delete</button><button class="btn btn-info rounded-pill mt-3" type="button">Update</button></div></div>'
                     $("#divTaskContainer").append(html);
                 });
             }
@@ -237,11 +237,10 @@
             })
         } else {
             $.post("http://localhost:8000/task/?TaskName="+taskName+"&DueDate="+dueDate+"&Location="+location+"&Instructions="+instructions+"&Status="+status+"", function(result) {
-                result = JSON.parse(result);
-                console.log(result);
                 if(result.Outcome) {
 
                 } else {
+                    console.log("task created")
                     Swal.fire({
                         title: "Success",
                         html: "Task Created",
@@ -251,6 +250,38 @@
             })
             updateTasks();
         }
+    })
+
+    $(document).on("click", ".btnDeleteTask", function(){
+        let taskID = $(this).attr("data");
+        let currElement = $("#"+taskID);
+        $.ajax({
+            type: "DELETE",
+            url: "http://localhost:8000/task/?TaskID="+taskID,
+            success: function(result) {
+                if (result.Outcome) {
+                    Swal.fire({
+                        title: "Error",
+                        html: "Failed deleting task",
+                        icon: "error"
+                    })
+                } else {
+                    Swal.fire({
+                        title: "Success",
+                        html: "Task deleted",
+                        icon: "success"
+                    }) 
+                }
+                updateTasks();
+            },
+            error: function(result){
+                Swal.fire({
+                        title: "Error",
+                        html: "Failed deleting task",
+                        icon: "error"
+                    })
+            }
+        })
     })
 
     $("#btnNo").on('click', function(){
