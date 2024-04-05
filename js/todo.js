@@ -118,7 +118,38 @@ app.delete('/task', function(req, res, next) {
 })
 
 app.put('/task', function(req, res, next) {
-    
+    let strTaskName = req.query.TaskName;
+    let strDueDate = req.query.DueDate;
+    let strLocation = req.query.Location;
+    let strInstructions = req.query.Instructions;
+    let strStatus = req.query.Status;
+    let strTaskID = req.query.TaskID;
+    console.log(strTaskName)
+    console.log(strDueDate)
+    console.log(strLocation)
+    console.log(strInstructions)
+    console.log(strStatus)
+    console.log(strTaskID)
+
+
+
+    if (strTaskName && strDueDate && strLocation && strInstructions && strStatus && strTaskID) {
+        let strCommand = "UPDATE tblTasks SET TaskName = ?, DueDate = ?, Location = ?, Instructions = ?, Status = ?, TaskID = ? WHERE TaskID = ?";
+        let strParameters = [strTaskName, strDueDate, strLocation, strInstructions, strStatus, strTaskID, strTaskID];
+        db.run(strCommand, strParameters, function(err,result) {
+            if (err) {
+                console.log('error with updating task: ' + err.message)
+                res.status(401).send({error:err.message})
+            } else {
+                res.status(201).json({
+                    message: "success"
+                })
+            }
+        })
+    } else {
+        console.log('failed to send paramters to add task')
+        res.status(401).send({message: "Error, missing parameters"})
+    }
 })
 
 app.listen(HTTP_PORT);
